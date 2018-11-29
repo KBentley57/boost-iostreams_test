@@ -6,7 +6,8 @@ To test:
 
 1. clone this repository
 2. Source the BuildScript file "source BuildInstall"
-2.1 This will download the 1.68.0 release source.
-2.2 xz-utils, zlib, bzip2, and boost will build.
-3. View the oputput of the ldd command.
+3. This will download the 1.68.0 release source from the web.
+4. The included xz-utils, zlib, bzip2, will build.
+5. Boost will build.
+6. View the oputput of the ldd command.
 
