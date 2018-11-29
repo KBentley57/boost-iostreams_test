@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# This script simply sets the environment variables for the library 
+# paths, calls cmake, and writes the output of ldd
+
+export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
+echo "-- LD_LIBRARY_PATH set to $LD_LIBRARY_PATH"
+export LIBRARY_PATH=$PWD/lib:$LIBRARY_PATH
+echo "-- LIBRARY_PATH set to $LIBRARY_PATH"
+export PATH=$PWD/bin:$PATH
+echo "-- PATH set to $PATH"
+	
+if [ -z $CC ]; then export CC=`which gcc`; fi
+echo "-- CC set to $CC"
+if [ -z $CXX ]; then export CXX=`which g++`; fi
+echo "-- CXX set to $CXX"
+if [ -z $CMAKE ]; then export CMAKE=`which cmake3`; fi
+echo "-- CMAKE set to $CMAKE"
+if [ -z $MAKE ]; then export MAKE=`which make`; fi
+echo "-- MAKE set to $MAKE"
+
+echo "-- Creating Build Directory "	
+if mkdir -p build ; then 
+	echo "-- Creating Build Directory - done"
+else 
+	echo "-- Creating Build Directory - error"
+fi
+
+export INSTALLDIR=$PWD
+
+cd build
+
+$CMAKE -DCMAKE_BUILD_TYPE=Release \
+       -DCMAKE_INSTALL_PREFIX=$INSTALLDIR ../
+
+$MAKE -j `cat /proc/cpuinfo |grep MHz |wc -l`
+
+cd $INSTALLDIR/lib
+
+echo " -------------------------------------------"
+echo " Running ldd on the boost iostreams library"
+
+ldd libboost_iostreams.so
+
+echo " -------------------------------------------"
